@@ -1,5 +1,6 @@
 FROM golang:1.10.0 AS build
-RUN go build -o /bin/wkhtmltopdf-service 
+COPY wkhtmltopdf-service.go wkhtmltopdf-service.go
+RUN go build -o /bin/wkhtmltopdf-service wkhtmltopdf-service.go
 
 FROM debian:9.3-slim
 RUN apt-get update && apt-get install -y \
@@ -15,4 +16,4 @@ RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkh
 
 COPY --from=build /bin/wkhtmltopdf-service /bin/wkhtmltopdf-service 
 EXPOSE 80
-ENTRYPOINT ["/wkhtmltox-service"]
+ENTRYPOINT ["/bin/wkhtmltopdf-service"]
